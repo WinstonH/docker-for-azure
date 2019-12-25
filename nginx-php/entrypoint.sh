@@ -1,0 +1,13 @@
+#!/bin/sh
+sudo php-fpm7
+sudo nginx
+
+#prepare sshd config
+sudo mkdir -p /var/run/sshd
+# generate host keys if not present
+sudo ssh-keygen -A
+#prepare xauth
+sudo touch /root/.Xauthority
+
+sudo /usr/bin/supervisord -c /etc/supervisord.conf
+exec "$@"
