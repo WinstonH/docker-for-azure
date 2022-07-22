@@ -25,4 +25,4 @@ COPY entrypoint.sh /usr/local/bin/
 ENV WEBSITES_PORT 80
 EXPOSE $WEBSITES_PORT 2222
 
-CMD ["entrypoint.sh"]
+ENTRYPOINT ["entrypoint.sh"]

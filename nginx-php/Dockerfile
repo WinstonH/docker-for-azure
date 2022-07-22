@@ -2,13 +2,14 @@ FROM alpine:edge
 MAINTAINER Winston H.
 # 设置中国时区
 ENV TZ='Asia/Shanghai'
-RUN apk upgrade --no-cache \
+RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
+    && apk upgrade --no-cache \
     && apk add --no-cache bash tzdata \
     && ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo '${TZ}' > /etc/timezone \
     && rm -rf /var/cache/apk/*
 # 添加nginx与php全家桶
-RUN apk add --no-cache nginx php7-fpm php7-mcrypt php7-soap php7-openssl php7-gmp php7-pdo_odbc php7-json php7-dom php7-pdo php7-zip php7-mysqli php7-sqlite3 php7-apcu php7-pdo_pgsql php7-bcmath php7-gd php7-odbc php7-pdo_mysql php7-pdo_sqlite php7-gettext php7-xmlreader php7-xmlrpc php7-bz2 php7-memcached php7-iconv php7-pdo_dblib php7-curl php7-ctype php7-mbstring \
+RUN apk --update --no-cache add nginx php7-fpm php7-mcrypt php7-soap php7-openssl php7-gmp php7-pdo_odbc php7-json php7-dom php7-pdo php7-zip php7-mysqli php7-sqlite3 php7-apcu php7-pdo_pgsql php7-bcmath php7-gd php7-odbc php7-pdo_mysql php7-pdo_sqlite php7-gettext php7-xmlreader php7-xmlrpc php7-bz2 php7-memcached php7-iconv php7-pdo_dblib php7-curl php7-ctype php7-mbstring php7-xmlwriter php7-simplexml \
     && rm -rf /var/cache/apk/*
 RUN adduser -D -g 'www' www && \
     mkdir /www && \
@@ -46,22 +47,17 @@ RUN sed -i "s|display_errors\s*=\s*Off|display_errors = ${PHP_DISPLAY_ERRORS}|i"
 # /etc/php7/php.ini
 ADD etc /etc
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories \
-&&apk --update --no-cache add unzip git x11vnc xvfb xrdp xauth alpine-desktop xfce4 ttf-freefont supervisor sudo openssl openssh dbus bash \
+&&apk --update --no-cache add unzip git wget curl supervisor sudo openssl openssh bash \
 && addgroup alpine \
-&& adduser  -G alpine -s /bin/sh -D alpine \
+&& adduser -G alpine -s /bin/sh -D alpine \
 && echo "alpine:alpine" | /usr/sbin/chpasswd \
-&& echo "alpine    ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
+&& echo "alpine ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers \
 && echo "root:Docker!" | chpasswd \
-&& git clone https://github.com/novnc/noVNC.git \
-&& ln -s /noVNC/vnc.html /noVNC/index.html
-RUN xrdp-keygen xrdp auto \
-&& sed -i '/TerminalServerUsers/d' /etc/xrdp/sesman.ini \
-&& sed -i '/TerminalServerAdmins/d' /etc/xrdp/sesman.ini \
 && rm -rf /tmp/* /var/cache/apk/* /etc/nginx/conf.d/default.conf
 # Add websites here
 COPY *.zip /home/site/wwwroot/
-WORKDIR /home/site/wwwroot
-RUN unzip /home/site/wwwroot/DirectoryLister.zip \
+RUN cd /home/site/wwwroot \
+&& unzip /home/site/wwwroot/DirectoryLister.zip \
 && mv /home/site/wwwroot/DirectoryLister-master/* /home/site/wwwroot \
 && rm -f /home/site/wwwroot/DirectoryLister.zip/ \
 && mkdir /home/site/wwwroot/admin \
@@ -73,8 +69,7 @@ RUN unzip /home/site/wwwroot/DirectoryLister.zip \
 && rm kodexplorer*.zip
 # End websites adding
 COPY entrypoint.sh /usr/sbin/
-WORKDIR /home/alpine
-USER alpine
+
 ENV WEBSITES_PORT 80
 EXPOSE $WEBSITES_PORT 2222
 ENTRYPOINT ["entrypoint.sh"]
