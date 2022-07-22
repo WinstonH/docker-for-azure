@@ -64,6 +64,8 @@ RUN cd /home/site/wwwroot \
 && mv kodexplorer*.zip /home/site/wwwroot/admin \
 && cd /home/site/wwwroot/admin \
 && unzip kodexplorer*.zip \
+&& mv KodExplorer*/* . \
+&& rm -r  KodExplorer* \
 && chmod 777 -Rf /home/site/wwwroot/admin \
 && chown -R nobody:nobody /home/site/wwwroot \
 && rm kodexplorer*.zip

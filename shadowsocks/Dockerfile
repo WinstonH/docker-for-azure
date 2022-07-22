@@ -14,7 +14,7 @@ RUN apk upgrade --no-cache \
 && tar -xzvf v2ray-plugin-linux-amd64-*.tar.gz \
 && mv v2ray-plugin_linux_amd64 /usr/bin/v2ray-plugin \
 # Clean
-&& apk del wget \
+&& apk del --purge wget \
 && rm -rf /tmp/* /var/cache/apk/* \
 # Config ssh
 && echo "root:Docker!" | chpasswd
