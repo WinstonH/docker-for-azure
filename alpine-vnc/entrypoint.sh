@@ -1,6 +1,6 @@
 #!/bin/sh
 #prepare sshd config
-sudo mkdir -p /var/run/sshd
+mkdir -p /var/run/sshd
 # generate host keys if not present
-sudo ssh-keygen -A
-sudo /usr/bin/supervisord -c /etc/supervisord.conf
+ssh-keygen -A
+/usr/bin/supervisord -c /etc/supervisord.conf

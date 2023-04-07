@@ -1,10 +1,10 @@
 #!/bin/sh
 #prepare sshd config
-sudo mkdir -p /var/run/sshd
+mkdir -p /var/run/sshd
 # generate host keys if not present
-sudo ssh-keygen -A
+ssh-keygen -A
 #prepare xauth
-sudo touch /root/.Xauthority
+touch /root/.Xauthority
 
-sudo /usr/bin/supervisord -c /etc/supervisord.conf
+/usr/bin/supervisord -c /etc/supervisord.conf
 exec "$@"

@@ -26,5 +26,5 @@ RUN ln -s /usr/share/novnc/vnc.html /usr/share/novnc/index.html
 WORKDIR /home/alpine
 ENV WEBSITES_PORT 6080
 EXPOSE $WEBSITES_PORT 2222
-USER alpine
+
 ENTRYPOINT ["entrypoint.sh"]

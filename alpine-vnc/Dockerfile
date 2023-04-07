@@ -19,5 +19,4 @@ WORKDIR /home/alpine
 ENV WEBSITES_PORT 6080
 EXPOSE $WEBSITES_PORT 2222
 
-USER alpine
 CMD entrypoint.sh
